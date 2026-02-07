@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>值班系统 - XX村春节筹备委员会</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(180deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #533483 100%);
+            --text-color: #F5F5DC;
+            --anomaly-color: #00CED1;
+            --system-color: #888;
+            --button-bg: rgba(139, 0, 0, 0.3);
+            --button-border: #8B4513;
+            --button-hover-bg: rgba(0, 206, 209, 0.1);
+            --button-hover-border: #00CED1;
+            --lantern-glow: rgba(255, 100, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Noto Serif SC", "SimSun", serif;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            font-size: 18px;
+            line-height: 1.8;
+            min-height: 100vh;
+            transition: background 3s ease;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 村庄背景装饰 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Cdefs%3E%3ClinearGradient id='sky' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231a1a2e'/%3E%3Cstop offset='50%25' style='stop-color:%2316213e'/%3E%3Cstop offset='100%25' style='stop-color:%230f3460'/%3E%3C/linearGradient%3E%3ClinearGradient id='ground' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%232a2a4a'/%3E%3Cstop offset='100%25' style='stop-color:%231a1a2e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1920' height='1080' fill='url(%23sky)'/%3E%3C!-- 远山 --%3E%3Cpath d='M0 700 Q200 550 400 650 T800 600 T1200 680 T1600 620 T1920 700 L1920 1080 L0 1080 Z' fill='%231a1a3a' opacity='0.7'/%3E%3Cpath d='M0 750 Q300 600 600 700 T1000 650 T1400 720 T1920 680 L1920 1080 L0 1080 Z' fill='%2315152a' opacity='0.8'/%3E%3C!-- 地面 --%3E%3Crect y='850' width='1920' height='230' fill='url(%23ground)'/%3E%3C!-- 房屋1 --%3E%3Crect x='100' y='700' width='200' height='150' fill='%232d2d4a'/%3E%3Cpolygon points='100 700 200 600 300 700' fill='%231a1a2a'/%3E%3Crect x='130' y='750' width='40' height='60' fill='%23ff6b35' opacity='0.6'/%3E%3Crect x='230' y='750' width='40' height='60' fill='%23ff6b35' opacity='0.6'/%3E%3C!-- 房屋2 --%3E%3Crect x='400' y='650' width='180' height='200' fill='%23252545'/%3E%3Cpolygon points='400 650 490 550 580 650' fill='%23151525'/%3E%3Crect x='420' y='700' width='35' height='50' fill='%23ff6b35' opacity='0.5'/%3E%3Crect x='520' y='700' width='35' height='50' fill='%23ff6b35' opacity='0.5'/%3E%3Crect x='460' y='780' width='60' height='70' fill='%23151525'/%3E%3C!-- 房屋3（带烟囱） --%3E%3Crect x='700' y='680' width='220' height='170' fill='%232a2a4a'/%3E%3Cpolygon points='700 680 810 570 920 680' fill='%231a1a3a'/%3E%3Crect x='850' y='620' width='30' height='50' fill='%232a2a4a'/%3E%3Cellipse cx='865' cy='620' rx='20' ry='8' fill='%23ff6b35' opacity='0.3'/%3E%3Crect x='730' y='730' width='45' height='70' fill='%23ff6b35' opacity='0.6'/%3E%3Crect x='840' y='730' width='45' height='70' fill='%23ff6b35' opacity='0.6'/%3E%3C!-- 房屋4 --%3E%3Crect x='1000' y='720' width='190' height='130' fill='%23252545'/%3E%3Cpolygon points='1000 720 1095 620 1190 720' fill='%23151535'/%3E%3Crect x='1020' y='770' width='40' height='50' fill='%23ff6b35' opacity='0.5'/%3E%3Crect x='1120' y='770' width='40' height='50' fill='%23ff6b35' opacity='0.5'/%3E%3C!-- 房屋5 --%3E%3Crect x='1250' y='680' width='200' height='170' fill='%232a2a4a'/%3E%3Cpolygon points='1250 680 1350 580 1450 680' fill='%231a1a2a'/%3E%3Crect x='1280' y='730' width='50' height='65' fill='%23ff6b35' opacity='0.6'/%3E%3Crect x='1370' y='730' width='50' height='65' fill='%23ff6b35' opacity='0.6'/%3E%3Crect x='1320' y='820' width='60' height='30' fill='%23151525'/%3E%3C!-- 人物剪影1 --%3E%3Cellipse cx='250' cy='860' rx='20' ry='25' fill='%23101020'/%3E%3Crect x='235' y='885' width='30' height='50' fill='%23101020'/%3E%3C!-- 人物剪影2 --%3E%3Cellipse cx='550' cy='870' rx='18' ry='22' fill='%23101020'/%3E%3Crect x='537' y='892' width='26' height='45' fill='%23101020'/%3E%3C!-- 人物剪影3 --%3E%3Cellipse cx='880' cy='865' rx='22' ry='28' fill='%23101020'/%3E%3Crect x='863' y='893' width='34' height='55' fill='%23101020'/%3E%3C!-- 人物剪影4 --%3E%3Cellipse cx='1120' cy='870' rx='20' ry='25' fill='%23101020'/%3E%3Crect x='1105' y='895' width='30' height='50' fill='%23101020'/%3E%3C!-- 红灯笼 --%3E%3Ccircle cx='150' cy='640' r='25' fill='%23ff4444' opacity='0.8'/%3E%3Crect x='148' y='665' width='4' height='40' fill='%23aa2222'/%3E%3Ccircle cx='500' cy='590' r='28' fill='%23ff4444' opacity='0.8'/%3E%3Crect x='498' y='618' width='4' height='45' fill='%23aa2222'/%3E%3Ccircle cx='850' cy='540' r='26' fill='%23ff4444' opacity='0.8'/%3E%3Crect x='848' y='566' width='4' height='42' fill='%23aa2222'/%3E%3Ccircle cx='1150' cy='590' r='27' fill='%23ff4444' opacity='0.8'/%3E%3Crect x='1148' y='617' width='4' height='43' fill='%23aa2222'/%3E%3Ccircle cx='1400' cy='630' r='25' fill='%23ff4444' opacity='0.8'/%3E%3Crect x='1398' y='655' width='4' height='40' fill='%23aa2222'/%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.9;
+        }
+
+        /* 红灯笼光晕效果 */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 10%;
+            left: 5%;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, var(--lantern-glow) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            animation: lanternGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes lanternGlow {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.2); }
+        }
+
+        #app {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .system-header {
+            font-family: "Courier New", monospace;
+            color: var(--system-color);
+            font-size: 14px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .scene-container {
+            min-height: 400px;
+            padding: 20px 0;
+        }
+
+        .narrative-text {
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+
+        .narrative-text .anomaly {
+            color: var(--anomaly-color);
+            text-shadow: 0 0 5px var(--anomaly-color);
+            font-weight: bold;
+        }
+
+        .narrative-text .choice-indicator {
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .choice-button {
+            border: 1px solid var(--button-border);
+            background: var(--button-bg);
+            color: var(--text-color);
+            padding: 15px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: "Noto Serif SC", "SimSun", serif;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .choice-button:hover {
+            background: var(--button-hover-bg);
+            border-color: var(--button-hover-border);
+            transform: translateX(5px);
+        }
+
+        .choice-button:active {
+            transform: translateX(3px);
+        }
+
+        .choice-button.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .choice-button.selected-mark {
+            position: relative;
+        }
+
+        .choice-button.selected-mark::before {
+            content: '✓';
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .choice-button.selected-mark {
+            padding-left: 40px;
+        }
+
+        .good-ending-stars {
+            color: #FFD700;
+            font-size: 24px;
+            margin-top: 20px;
+            animation: sparkle 1s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .ending-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .ending-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: var(--anomaly-color);
+            text-shadow: 0 0 10px var(--anomaly-color);
+        }
+
+        .ending-text {
+            margin-bottom: 40px;
+            line-height: 2;
+        }
+
+        .restart-button {
+            border: 1px solid var(--button-border);
+            background: var(--button-bg);
+            color: var(--text-color);
+            padding: 15px 40px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: "Noto Serif SC", "SimSun", serif;
+        }
+
+        .restart-button:hover {
+            background: var(--button-hover-bg);
+            border-color: var(--button-hover-border);
+        }
+
+        .name-input-container {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .name-input-title {
+            font-size: 28px;
+            margin-bottom: 40px;
+            color: var(--text-color);
+        }
+
+        .name-input-field {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-family: "Noto Serif SC", "SimSun", serif;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--button-border);
+            color: var(--text-color);
+            border-radius: 5px;
+            margin-bottom: 30px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .name-input-field:focus {
+            border-color: var(--button-hover-border);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .name-input-field::placeholder {
+            color: #666;
+        }
+
+        .start-game-button {
+            border: 2px solid var(--button-border);
+            background: var(--button-bg);
+            color: var(--text-color);
+            padding: 15px 50px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: "Noto Serif SC", "SimSun", serif;
+            border-radius: 5px;
+        }
+
+        .start-game-button:hover {
+            background: var(--button-hover-bg);
+            border-color: var(--button-hover-border);
+            transform: scale(1.05);
+        }
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: "Noto Serif SC", "SimSun", serif;
+        }
+
+        .restart-button:hover {
+            background: var(--button-hover-bg);
+            border-color: var(--button-hover-border);
+        }
+
+        .glitch-effect {
+            animation: glitch 0.1s ease-in-out;
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: translate(0, 0); filter: none; }
+            25% { transform: translate(-2px, 2px); filter: hue-rotate(90deg) saturate(200%); }
+            50% { transform: translate(2px, -2px); filter: hue-rotate(180deg) saturate(300%); }
+            75% { transform: translate(-2px, -2px); filter: hue-rotate(270deg) saturate(200%); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .blinking-text {
+            animation: blink 4s infinite;
+        }
+
+        @keyframes blink {
+            0%, 90%, 100% { opacity: 1; }
+            92% { opacity: 0; }
+            94% { opacity: 0; }
+            96% { opacity: 1; }
+        }
+
+        /* 启动画面 */
+        #startup-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            font-family: "Courier New", monospace;
+        }
+
+        .startup-text {
+            color: #00FF00;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+        }
+
+        .version-info {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-family: "Courier New", monospace;
+            color: var(--system-color);
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            #app {
+                padding: 20px 15px;
+            }
+
+            .narrative-text {
+                font-size: 16px;
+            }
+
+            .choice-button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 启动画面 -->
+    <div id="startup-screen">
+        <div class="scanlines"></div>
+        <div class="startup-text">贰道沟村春节筹备委员会 - 值班系统 v1.0</div>
+        <div class="startup-text">正在加载...</div>
+        <div class="startup-text" id="startup-progress">█</div>
+    </div>
+
+    <!-- 名字输入界面 -->
+    <div id="name-input-screen" style="display: none;">
+        <div class="scanlines"></div>
+        <div class="name-input-container">
+            <div class="name-input-title">请输入您的姓名</div>
+            <input type="text" id="player-name-input" class="name-input-field" placeholder="请输入姓名（2-4个字）" maxlength="4">
+            <br>
+            <button class="start-game-button" onclick="startGame()">开始值班</button>
+        </div>
+    </div>
+
+    <!-- 主游戏界面 -->
+    <div id="app" style="display: none;">
+        <div class="system-header">
+            <div id="system-text">贰道沟村春节筹备委员会 | 值班系统 | 除夕 17:00</div>
+        </div>
+
+        <div class="scene-container" id="scene-container">
+            <div class="narrative-text" id="narrative-text"></div>
+            <div class="choices-container" id="choices-container"></div>
+        </div>
+    </div>
+
+    <!-- 版本信息 -->
+    <div class="version-info" id="version-info">v1.0</div>
+
+    <script>
+        // ==================== 游戏状态机 ====================
+        const GameState = {
+            playerName: '',     // 玩家姓名
+            choices: [],        // 记录三次选择 ['A','B','A']
+            previousChoices: [], // 记录上周目的选择 ['A','B','A']
+            currentScene: 'startup',  // 当前场景ID
+            flags: {            // 特殊标记
+                cUnlocked: false,   // 祠堂选项是否解锁
+                endingsSeen: [],    // 已观看结局 ['ending-1', 'ending-2']
+                playCount: 0,       // 游玩次数
+                totalPlayCount: 0   // 总游玩次数（包括所有周目）
+            },
+            isTyping: false     // 是否正在打字中
+        };
+
+        // ==================== 存档系统 ====================
+        const SaveData = {
+            version: '1.0',
+            choicesHistory: [],
+            endingsUnlocked: [],
+            flags: {
+                cUnlocked: false,
+                trueEndingHint: false
+            },
+            lastScene: null,
+            playCount: 0
+        };
+
+        function saveGame() {
+            const data = {
+                ...SaveData,
+                playerName: GameState.playerName,
+                choicesHistory: GameState.choices,
+                endingsUnlocked: GameState.flags.endingsSeen,
+                flags: GameState.flags,
+                playCount: GameState.flags.playCount,
+                totalPlayCount: GameState.flags.totalPlayCount,
+                previousChoices: GameState.previousChoices
+            };
+            localStorage.setItem('spring-festival-duty', JSON.stringify(data));
+        }
+
+        function loadGame() {
+            const data = localStorage.getItem('spring-festival-duty');
+            if (data) {
+                const parsed = JSON.parse(data);
+                GameState.playerName = parsed.playerName || '';
+                GameState.flags = parsed.flags;
+                GameState.flags.endingsSeen = parsed.endingsUnlocked || [];
+                GameState.flags.playCount = parsed.playCount || 0;
+                GameState.flags.totalPlayCount = parsed.totalPlayCount || 0;
+                GameState.previousChoices = parsed.previousChoices || [];
+                return parsed;
+            }
+            return null;
+        }
+
+        // ==================== 场景数据对象 ====================
+        const Scenes = {
+            'startup': {
+                title: '启动',
+                systemText: '贰道沟村春节筹备委员会 | 值班系统 | 初始化中...',
+                narrative: '【屏幕显示：加载中...】\n\n一串电子鞭炮声。有点卡，像老磁带。\n\n【显示：贰道沟村春节筹备委员会 - 值班系统】\n【日期：除夕 | 值班员：███（你的名字）| 状态：巡查中】',
+                choices: [
+                    { text: '开始值班', target: 'village-entrance', type: 'start' }
+                ]
+            },
+
+            'village-entrance': {
+                title: '村口',
+                systemText: '贰道沟村春节筹备委员会 | 值班系统 | 除夕 17:00',
+                narrative: '你站在村口。\n\n红灯笼挂满了，但风一吹，它们都不晃。像是画上去的。\n\n手机响了。村长语音："小█啊，今年你值班，三家重点户要检查。春联、年货、守岁准备，拍照上传。别像去年..." 他顿了一下，"别出差错。"\n\n你问去年怎么了。信号断了。\n\n面前三条路：\n<span class="choice-indicator">• 左边老张家，门联新贴，浆糊还没干</span>\n<span class="choice-indicator">• 中间李婶家，烟囱在冒烟，但烟是直的，不散</span>\n<span class="choice-indicator">• 右边祠堂，土地公像前有人跪着，背对你，姿势太端正了</span>',
+                choices: [
+                    { text: 'A. 去老张家', target: 'zhang-house', type: 'A' },
+                    { text: 'B. 去李婶家', target: 'li-house', type: 'B' },
+                    {
+                        text: 'C. 去祠堂（某种直觉告诉你该去这里）',
+                        target: 'temple',
+                        type: 'C',
+                        condition: () => GameState.flags.cUnlocked
+                    }
+                ]
+            },
+
+            'zhang-house': {
+                title: '老张家',
+                systemText: '贰道沟村春节筹备委员会 | 值班系统 | 检查对象：老张家',
+                narrative: '院门敞开。老张迎出来，笑脸标准，"来啦？吃饺子啊！"\n\n你注意到春联——上联"天增岁月人增寿"，下联"春满乾坤福满门"。\n\n但上联在左，下联在右。<span class="anomaly">贴反了。</span>',
+                choices: [
+                    { text: 'A. "张叔，联贴反了，我帮您正过来" —— 伸手去撕', target: 'zhang-house-a', type: 'A' },
+                    { text: 'B. "挺好的，我拍个照" —— 后退一步，镜头对准门', target: 'zhang-house-b', type: 'B' }
+                ]
+            },
+
+            'zhang-house-a': {
+                title: '老张家',
+                systemText: 'XX村春节筹备委员会 | 值班系统 | 异常检测中...',
+                narrative: '你撕下上联的瞬间，老张的笑容<span class="anomaly">没有收回</span>，但眼睛跟着你的手移动。\n\n"反了？"他说，"哦。对。反了。"\n\n浆糊是温热的，像血。你贴正后，发现上联的字变了——"天增岁月<span class="anomaly">伱</span>增寿"的"人"字，变成了"伱"。\n\n老张说："进屋吃饺子吧。"\n\n他转身时，阳光从他身上穿过。地上<span class="anomaly">没有影子</span>。\n\n饺子端上来。韭菜馅。你咬到硬物——半片<span class="anomaly">指甲</span>，涂着褪色的红指甲油。\n\n老张的妻子上周刚去世。村里人说，她是涂着红指甲走的。\n\n<span class="anomaly">【它们在扮演。扮演"老张一家"。扮演"春节"。】</span>\n\n<span class="anomaly">【真正的老张一家，在准备年夜饭的时候，已经被"替换"了。】</span>\n\n<span class="anomaly">【问题是——这是什么时候的事？今年，还是去年？】</span>',
+                choices: [
+                    { text: '逃走，去祠堂求助', target: 'temple', type: 'continue', recordType: 'A' }
+                ]
+            },
+
+            'zhang-house-b': {
+                title: '老张家',
+                systemText: 'XX村春节筹备委员会 | 值班系统 | 异常检测中...',
+                narrative: '你拍照时，镜头里的春联是正的。\n\n放下手机，肉眼看到的还是反的。\n\n老张凑过来看照片，他的脸在屏幕里<span class="anomaly">延迟了0.5秒</span>才出现。\n\n"拍清楚了吗？"他问。\n\n你放大照片。门边站着另一个人，穿寿衣，低着头。现场没有这个人。\n\n老张说："进屋吃饺子吧。"\n\n你抬头，他已经进了屋。地上<span class="anomaly">有两双脚印</span>，但只有他一个人的鞋。\n\n<span class="anomaly">【它们在扮演。扮演"老张一家"。扮演"春节"。】</span>\n\n<span class="anomaly">【真正的老张一家，在准备年夜饭的时候，已经被"替换"了。】</span>\n\n<span class="anomaly">【问题是——这是什么时候的事？今年，还是去年？】</span>',
+                choices: [
+                    { text: '逃走，去祠堂求助', target: 'temple', type: 'continue', recordType: 'B' }
+                ]
+            },
+
+            'li-house': {
+                title: '李婶家',
+                systemText: '贰道沟村春节筹备委员会 | 值班系统 | 检查对象：李婶家',
+                narrative: '李婶家烟囱在冒烟，但烟是直的，不散。\n\n你推门进去，李婶正在包饺子。\n\n"来啦？帮忙包几个？"\n\n她递给你一个面团。面团<span class="anomaly">是冷的</span>，像石头的温度。\n\n"馅在哪？"你问。\n\n她指了指桌上。桌上只有一个空碗。\n\n"馅在碗里，"她说，"你看不见吗？"\n\n碗确实是满的。红色的，冒着热气。\n\n但那不是馅。是<span class="anomaly">血</span>。\n\n"快包啊，"李婶催促，"包完了煮给灶王爷吃。"\n\n你注意到她的手——十个手指，<span class="anomaly">八个指甲</span>。\n\n少的那两个指甲，在你口袋里。',
+                choices: [
+                    { text: '逃走，去祠堂求助', target: 'temple', type: 'continue', recordType: 'B' }
+                ]
+            },
+
+            'temple': {
+                title: '祠堂',
+                systemText: '贰道沟村春节筹备委员会 | 值班系统 | 检查对象：祠堂',
+                narrative: '祠堂比外面冷。土地公像前跪着个人，是你同事小王。\n\n他磕头，起身，再磕头。节奏精准，像在循环。\n\n供桌上：苹果是蜡的，香灰是冷的，但香炉是热的。\n\n土地公像的脸被红布盖着。布在动，像下面有呼吸。',
+                choices: [
+                    { text: 'A. 掀开红布 —— "土地公，我有事问您"', target: 'temple-a', type: 'A' },
+                    { text: 'B. 跪下一起拜 —— 观察小王的动作细节', target: 'temple-b', type: 'B' }
+                ]
+            },
+
+            'temple-a': {
+                title: '祠堂',
+                systemText: '贰道沟村春节筹备委员会 | 值班系统 | 严重异常',
+                narrative: '红布下是另一张红布。再掀，还是红布。\n\n第七层，你触到硬物。是<span class="anomaly">镜子</span>。\n\n镜子里没有你的脸。有一个老人，穿土地公的袍子，正在<span class="anomaly">模仿你的表情</span>。\n\n你皱眉，他皱眉。你张嘴，他张嘴。\n\n但你的嘴没张开。张开的是<span class="anomaly">他</span>。\n\n身后传来小王的声音，和土地公像同步："香火旺，子孙昌。香火旺，子孙昌。"\n\n你转头。小王的脸是<span class="anomaly">背面</span>的——五官朝后，后脑勺对着你，但嘴在动。\n\n他说的是去年的祝福语。去年祠堂失火，小王<span class="anomaly">死在里面</span>。\n\n<span class="anomaly">【神也被扮演了。而且扮演者在使用"记忆"。】</span>\n\n<span class="anomaly">【去年的祝福，去年的值班表，去年的死者。】</span>\n\n<span class="anomaly">【这个春节是循环的。每一次循环，都有人被"更新"进角色里。】</span>',
+                choices: [
+                    { text: '回家', target: 'home', type: 'continue', recordType: 'A' }
+                ]
+            },
+
+            'temple-b': {
+                title: '祠堂',
+                systemText: '贰道沟村春节筹备委员会 | 值班系统 | 严重异常',
+                narrative: '你跪下。小王没有侧头，但说："你也来了。"\n\n他的磕头频率和你的心跳一致。你心跳快，他磕得快。\n\n你试图放慢呼吸。他的动作也慢了。\n\n供桌下有纸。你假装系鞋带，看到是<span class="anomaly">去年的值班表</span>。\n\n你的名字旁边，照片是<span class="anomaly">小王的脸</span>。\n\n你抬头。小王停止了磕头。他正看着你，<span class="anomaly">脖子没转，眼珠滑到眼角</span>。\n\n"去年是你值班，"他说，"今年轮到我。"\n\n"明年轮到谁？"\n\n"你。"\n\n<span class="anomaly">【神也被扮演了。而且扮演者在使用"记忆"。】</span>\n\n<span class="anomaly">【去年的祝福，去年的值班表，去年的死者。】</span>\n\n<span class="anomaly">【这个春节是循环的。每一次循环，都有人被"更新"进角色里。】</span>',
+                choices: [
+                    { text: '回家', target: 'home', type: 'continue', recordType: 'B' }
+                ]
+            },
+
+            'home': {
+                title: '自己家',
+                systemText: '贰道沟村春节筹备委员会 | 值班系统 | 检查对象：自己家',
+                narrative: '你逃回家。门没锁。\n\n屋里暖，菜香，春晚开着，声音有点卡。\n\n"回来啦？"母亲从厨房探头，"洗手，饺子马上好。"\n\n父亲在客厅，背对你，看春晚。他的肩膀<span class="anomaly">没有随着笑声抖动</span>。\n\n桌上六盘菜，六盘都是<span class="anomaly">饺子</span>。不同馅的饺子。\n\n你的座位前，放着一本<span class="anomaly">新的值班表</span>。照片是你的脸，但名字是<span class="anomaly">空白</span>。',
+                choices: [
+                    { text: 'A. 掀桌 —— "你们是谁？"', target: 'home-a', type: 'A' },
+                    { text: 'B. 坐下 —— "妈，今年饺子什么馅？"', target: 'home-b', type: 'B' }
+                ]
+            },
+
+            'home-a': {
+                title: '年夜饭',
+                systemText: '贰道沟村春节筹备委员会 | 值班系统 | 最终异常',
+                narrative: '桌子翻了。饺子滚一地。\n\n母亲的脸<span class="anomaly">没有变化</span>，还是笑着的。她说："怎么了？不喜欢吃？"\n\n父亲转过身。他的脸是<span class="anomaly">正面</span>的，但五官位置不对——眼睛在下巴，嘴在额头。\n\n他在调整。像穿错衣服的人整理领子。\n\n几秒钟后，五官归位。是父亲的脸。\n\n"去年你也掀过桌，"他说，"然后你成了值班员。"\n\n你后退，撞到镜子。镜子里，<span class="anomaly">你的脸在延迟0.5秒后才出现</span>。\n\n就像老张那样。\n\n母亲捡起一个饺子，递给你："吃了这顿，明年你就不用值班了。"\n\n饺子馅是<span class="anomaly">纸</span>。纸上写着明年的值班表，名字是你的，照片是<span class="anomaly">父亲的</span>。',
+                choices: [
+                    { text: '...', target: 'ending-1', type: 'end' }
+                ]
+            },
+
+            'home-b': {
+                title: '年夜饭',
+                systemText: '贰道沟村春节筹备委员会 | 值班系统 | 最终异常',
+                narrative: '你坐下。母亲的笑容<span class="anomaly">加深了一毫米</span>。\n\n"韭菜鸡蛋，你最爱吃的。"\n\n你夹饺子。筷子碰到硬物——不是指甲，是<span class="anomaly">钥匙</span>。你家门的钥匙，但齿痕是<span class="anomaly">反的</span>。\n\n父亲开始说话。他说的是<span class="anomaly">你去年除夕说的话</span>，连停顿和咳嗽都一样。\n\n你注意到他的筷子<span class="anomaly">从未张开</span>，只是夹着空气，往嘴里送。\n\n母亲问："今年巡查，看到什么异常的？"\n\n你回答。每说一个字，她的眼睛就<span class="anomaly">亮一点</span>。\n\n你说完了。她说："好。明年你可以休息了。"\n\n她指向厨房。灶台上躺着一个人，穿你的衣服，<span class="anomaly">没有脸</span>。\n\n"那是去年的你，"母亲说，"今年的你，坐在这里。"\n\n"明年的你，在锅里。"',
+                choices: [
+                    { text: '...', target: 'ending-2', type: 'end' }
+                ]
+            }
+        };
+
+        // ==================== 结局数据 ====================
+        const Endings = {
+            'ending-1': {
+                title: '守岁人',
+                text: '你"杀死"了扮演父母的存在。\n\n它们碎在地上，像瓷器，里面是空的。\n\n你跑出门，村子很安静。所有灯都亮着，但没有人影。\n\n你回到村委会，系统还开着。值班表上，你的名字消失了。\n\n取而代之的是父亲的名字，母亲的名字，老张的名字，小王的名字。\n\n它们轮流值班，轮流被扮演，轮流在除夕夜"回家"。\n\n你坐下，给自己倒了杯水。手有点不听使唤，在模仿某个动作。\n\n窗外有人敲门。是巡查的筹备委员，新来的，满脸困惑。\n\n你露出微笑。标准的，练习过的。\n\n"来啦？吃饺子啊。"\n\n<span class="anomaly">【系统提示：明年春节，记得检查春联。】</span>\n\n<span class="anomaly">【达成结局：守岁人】</span>',
+                endingType: 1
+            },
+
+            'ending-2': {
+                title: '一家人',
+                text: '你吃下了饺子。\n\n味道很熟悉。不是韭菜鸡蛋，是<span class="anomaly">记忆的味道</span>。\n\n你开始记得母亲的手艺，记得父亲的笑声，记得每年除夕的流程。\n\n你记得自己从未有过的童年。\n\n镜子里的你，五官归位了。延迟消失了。\n\n你成为最好的扮演者——不仅模仿行为，连<span class="anomaly">情感都模仿得真挚</span>。\n\n第二年除夕，你提前贴了春联，上联在右，下联在左。\n\n第三年，你开始主动邀请巡查的筹备委员进屋。\n\n第四年，你有了自己的孩子。孩子没有影子，但笑得很大声。\n\n第五年，你站在村口，看到新来的值班员。\n\n你露出微笑。\n\n"来啦？吃饺子啊。"\n\n<span class="anomaly">【系统提示：春节快乐。阖家团圆。】</span>\n\n<span class="anomaly">【达成结局：一家人】</span>',
+                endingType: 2
+            },
+
+            'ending-3': {
+                title: '年',
+                text: '你逃出了家门。\n\n村子在身后熄灭。不是关灯，是<span class="anomaly">被撤销了</span>，像关掉的图层。\n\n你走在荒原上。地面是红色的，像鞭炮碎屑铺成的。\n\n远处有光。是另一个村子，也挂着灯笼，也有炊烟。\n\n你走近。村口站着筹备委员，在巡查。\n\n你躲起来，看到"他"走进一户人家。那户人家在包饺子，笑容标准。\n\n你继续走。第三个村子。第四个。第五个。\n\n都是一样的。都是被扮演的春节，都是循环的值班表。\n\n你终于明白：<span class="anomaly">春节需要被观测才能存在。</span>\n\n而观测者，就是燃料。\n\n你停下脚步。荒原上只有你一个人，但你的影子<span class="anomaly">有好几个</span>，朝向不同方向。\n\n它们在争吵。一个说回去，一个说继续走，一个说<span class="anomaly">跪下扮演</span>。\n\n你选择了第四个选项——<span class="anomaly">成为荒原本身</span>。\n\n现在，每当有新的筹备委员逃离村子，就会在红土地上看到你。\n\n你没有脸，但你会说话。\n\n你说："来啦？吃饺子啊。"\n\n<span class="anomaly">【系统提示：您已退出值班系统。】</span>\n\n<span class="anomaly">【系统提示：欢迎加入管理层。】</span>\n\n<span class="anomaly">【达成结局：年】</span>',
+                endingType: 3
+            },
+
+            'ending-4': {
+                title: '真正的春节',
+                text: '你睁开眼。\n\n不是在家里，是在村口。\n\n风是暖的，带着饺子的香气。\n\n红灯笼在风里轻轻摇晃，灯笼下有人——真正的老张，真正的李婶，真正的小王。\n\n他们在笑，笑声从心底里传出来。\n\n你低头看自己的手。有影子。\n\n"小█，来啦？"老张喊你，"饺子刚出锅！"\n\n你走近。春联贴得正正的，上联在右，下联在左。\n\n祠堂里，土地公像前的香火正旺，青烟袅袅升起。\n\n供桌上摆着新鲜的水果，不是蜡的。\n\n你回到家。母亲从厨房出来，手里端着饺子。\n\n"回来啦？"她说，眼神温柔，"洗手，马上吃饭。"\n\n父亲在看春晚，肩膀随着笑声微微抖动。\n\n桌上有六盘菜，不是只有饺子。有鱼，有鸡，有青菜，有肉。\n\n饺子馅是韭菜鸡蛋，香喷喷的。\n\n你咬了一口。没有指甲，没有纸，没有血。\n\n是记忆中的味道，但不是<span class="anomaly">别人的记忆</span>。\n\n是<span class="anomaly">你自己的记忆</span>。\n\n"好吃吗？"母亲问。\n\n你点头，眼泪掉下来。\n\n"怎么了？"母亲关切地问。\n\n你摇摇头，擦了擦眼睛。\n\n"没事，"你说，"就是...觉得这个春节，很真实。"\n\n窗外，烟花升起来。\n\n不是幻象，不是扮演。\n\n是真的烟花。\n\n照亮了整个村子，照亮了每个人的脸。\n\n那些脸，你都认识。\n\n他们都活着。\n\n<span class="good-ending-stars">★★★</span>\n\n<span class="anomaly">【系统提示：你打破了循环。】</span>\n\n<span class="anomaly">【系统提示：你找到了真正的春节。】</span>\n\n<span class="anomaly">【系统提示：祝您春节快乐，阖家幸福。】</span>\n\n<span class="anomaly">【达成真结局：真正的春节】</span>',
+                endingType: 4,
+                isGoodEnding: true
+            }
+        };
+
+        // ==================== 核心函数 ====================
+
+        // 逐字显示
+        function typeWriter(element, text, speed = 50, callback) {
+            GameState.isTyping = true;
+            let i = 0;
+            element.innerHTML = '';
+
+            // 处理 HTML 标签
+            const parts = text.split(/(<[^>]+>)/g);
+            let partIndex = 0;
+            let charIndex = 0;
+
+            function type() {
+                if (partIndex >= parts.length) {
+                    GameState.isTyping = false;
+                    if (callback) callback();
+                    return;
+                }
+
+                const part = parts[partIndex];
+
+                // 如果是 HTML 标签，直接添加
+                if (part.startsWith('<')) {
+                    element.innerHTML += part;
+                    partIndex++;
+                    setTimeout(type, 0);
+                    return;
+                }
+
+                // 逐字显示普通文本
+                if (charIndex < part.length) {
+                    element.innerHTML += part.charAt(charIndex);
+                    charIndex++;
+
+                    // 每20字播放一次打字音效
+                    if (charIndex % 20 === 0) {
+                        playTypeSound();
+                    }
+
+                    // 随机延迟模拟"思考"
+                    const randomSpeed = speed + (Math.random() * 30 - 15);
+                    setTimeout(type, randomSpeed);
+                } else {
+                    charIndex = 0;
+                    partIndex++;
+                    setTimeout(type, 0);
+                }
+            }
+
+            type();
+        }
+
+        // 渲染场景
+        function renderScene(sceneId) {
+            const scene = Scenes[sceneId];
+            if (!scene) {
+                console.error('场景不存在:', sceneId);
+                return;
+            }
+
+            GameState.currentScene = sceneId;
+
+            // 更新系统文本
+            const systemText = document.getElementById('system-text');
+            systemText.textContent = scene.systemText;
+
+            // 渲染叙事文本
+            const narrativeText = document.getElementById('narrative-text');
+            narrativeText.innerHTML = '';
+            narrativeText.classList.add('fade-in');
+
+            // 替换玩家名字
+            let narrative = scene.narrative;
+            if (GameState.playerName) {
+                narrative = narrative.replace(/███/g, GameState.playerName);
+                narrative = narrative.replace(/小█/g, '小' + GameState.playerName.charAt(GameState.playerName.length - 1));
+            }
+
+            typeWriter(narrativeText, narrative, 50, () => {
+                // 打字完成后渲染选择按钮
+                renderChoices(scene.choices);
+            });
+        }
+
+        // 渲染选择按钮
+        function renderChoices(choices) {
+            const choicesContainer = document.getElementById('choices-container');
+            choicesContainer.innerHTML = '';
+
+            choices.forEach(choice => {
+                // 检查条件
+                if (choice.condition && !choice.condition()) {
+                    return;
+                }
+
+                const button = document.createElement('button');
+                button.className = 'choice-button';
+                button.textContent = choice.text;
+
+                if (choice.condition && !GameState.flags.cUnlocked) {
+                    button.classList.add('locked');
+                }
+
+                // 检查是否是上周目已选择的选项
+                const recordType = choice.recordType || choice.type;
+                if (choice.type !== 'start' && choice.type !== 'end') {
+                    // 根据当前场景确定在previousChoices中的索引
+                    const sceneChoiceIndex = getSceneChoiceIndex(GameState.currentScene);
+                    if (sceneChoiceIndex !== -1 && GameState.previousChoices[sceneChoiceIndex] === recordType) {
+                        button.classList.add('selected-mark');
+                    }
+                }
+
+                button.addEventListener('click', () => {
+                    if (GameState.isTyping) return;
+
+                    playClickSound();
+
+                    // 记录选择
+                    const typeToRecord = choice.recordType || choice.type;
+                    if (choice.type !== 'start' && choice.type !== 'end') {
+                        GameState.choices.push(typeToRecord);
+                    }
+
+                    // 处理特殊场景
+                    if (choice.target === 'ending-2' && GameState.choices[0] !== GameState.choices[1]) {
+                        // 如果前两次选择不同，进入真结局
+                        handleChoice('ending-3');
+                    } else if (choice.target === 'home-b' && GameState.flags.totalPlayCount >= 3 && GameState.flags.endingsSeen.includes('ending-1') && GameState.flags.endingsSeen.includes('ending-2') && GameState.flags.endingsSeen.includes('ending-3')) {
+                        // 如果已完成3个结局且选择B，进入好结局
+                        handleChoice('ending-4');
+                    } else {
+                        handleChoice(choice.target);
+                    }
+                });
+
+                choicesContainer.appendChild(button);
+            });
+        }
+
+        // 获取当前场景在previousChoices中的索引
+        function getSceneChoiceIndex(sceneId) {
+            const choiceScenes = ['village-entrance', 'zhang-house', 'temple', 'home'];
+            return choiceScenes.indexOf(sceneId);
+        }
+
+        // 处理选择
+        function handleChoice(target) {
+            // 检查是否是结局
+            if (target.startsWith('ending-')) {
+                showEnding(target);
+                return;
+            }
+
+            // 特殊处理：从祠堂到自家，计算结局类型
+            if (target === 'home') {
+                // 检查是否需要进入真结局
+                if (GameState.choices.length >= 2 && GameState.choices[0] !== GameState.choices[1]) {
+                    // 前两次选择不同，标记为真结局路线
+                    GameState.flags.trueEndingRoute = true;
+                }
+            }
+
+            // 屏幕抖动效果
+            screenGlitch();
+
+            // 延迟跳转
+            setTimeout(() => {
+                renderScene(target);
+            }, 300);
+        }
+
+        // 显示结局
+        function showEnding(endingId) {
+            const ending = Endings[endingId];
+            if (!ending) {
+                console.error('结局不存在:', endingId);
+                return;
+            }
+
+            // 记录结局
+            if (!GameState.flags.endingsSeen.includes(endingId)) {
+                GameState.flags.endingsSeen.push(endingId);
+            }
+
+            // 增加游玩次数
+            GameState.flags.playCount++;
+            GameState.flags.totalPlayCount++;
+
+            // 解锁祠堂选项
+            if (GameState.flags.playCount >= 1) {
+                GameState.flags.cUnlocked = true;
+            }
+
+            // 保存进度
+            saveGame();
+
+            // 背景颜色渐变（好结局使用温暖色调）
+            if (ending.isGoodEnding) {
+                document.body.style.background = 'linear-gradient(180deg, #1a2a1a 0%, #2a4a2a 50%, #3a5a3a 100%)';
+            } else {
+                document.body.style.background = 'linear-gradient(180deg, #000a0a 0%, #001a1a 50%, #002a2a 100%)';
+            }
+
+            // 渲染结局
+            const sceneContainer = document.getElementById('scene-container');
+            sceneContainer.innerHTML = `
+                <div class="ending-container">
+                    <div class="ending-title">${ending.title}</div>
+                    <div class="ending-text" id="ending-text"></div>
+                    <button class="restart-button" onclick="restartGame()">再玩一次</button>
+                </div>
+            `;
+
+            // 逐字显示结局文本
+            const endingText = document.getElementById('ending-text');
+            typeWriter(endingText, ending.text, 40);
+        }
+
+        // 重新开始游戏
+        function restartGame() {
+            // 保存当前选择到previousChoices
+            GameState.previousChoices = [...GameState.choices];
+
+            // 重置当前选择
+            GameState.choices = [];
+            GameState.currentScene = 'startup';
+            GameState.isTyping = false;
+
+            // 恢复背景颜色
+            document.body.style.background = '';
+
+            // 隐藏游戏界面，显示名字输入界面
+            document.getElementById('app').style.display = 'none';
+            document.getElementById('name-input-screen').style.display = 'block';
+
+            // 填充上次的名字
+            if (GameState.playerName) {
+                document.getElementById('player-name-input').value = GameState.playerName;
+            }
+        }
+
+        // ==================== 视觉特效 ====================
+
+        // 屏幕抖动
+        function screenGlitch() {
+            const app = document.getElementById('app');
+            app.classList.add('glitch-effect');
+
+            setTimeout(() => {
+                app.classList.remove('glitch-effect');
+            }, 100);
+        }
+
+        // ==================== 音频系统 ====================
+        let audioContext = null;
+
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // 播放点击音效
+        function playClickSound() {
+            initAudio();
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.05);
+        }
+
+        // 播放打字音效
+        function playTypeSound() {
+            initAudio();
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = 600;
+            oscillator.type = 'triangle';
+
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.03);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.03);
+        }
+
+        // Glitch 音效
+        function playGlitchSound() {
+            initAudio();
+
+            const bufferSize = audioContext.sampleRate * 0.5;
+            const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+
+            for (let i = 0; i < bufferSize; i++) {
+                if (i > bufferSize * 0.3 && i < bufferSize * 0.35) {
+                    data[i] = 0;
+                } else {
+                    data[i] = Math.sin(i * 0.1) * 0.5;
+                }
+            }
+
+            const source = audioContext.createBufferSource();
+            source.buffer = buffer;
+            source.connect(audioContext.destination);
+            source.start();
+        }
+
+        // ==================== 启动画面 ====================
+        function showStartup() {
+            const startupScreen = document.getElementById('startup-screen');
+            const startupProgress = document.getElementById('startup-progress');
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                startupProgress.textContent += '█';
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+
+                    setTimeout(() => {
+                        startupScreen.style.display = 'none';
+                        document.getElementById('name-input-screen').style.display = 'block';
+
+                        // 加载存档
+                        loadGame();
+
+                        // 如果已有名字，自动填充
+                        if (GameState.playerName) {
+                            document.getElementById('player-name-input').value = GameState.playerName;
+                        }
+                    }, 500);
+                }
+            }, 30);
+        }
+
+        // 开始游戏
+        function startGame() {
+            const nameInput = document.getElementById('player-name-input');
+            const playerName = nameInput.value.trim();
+
+            // 验证名字
+            if (!playerName) {
+                alert('请输入姓名');
+                return;
+            }
+
+            if (playerName.length < 2) {
+                alert('姓名至少需要2个字');
+                return;
+            }
+
+            if (playerName.length > 4) {
+                alert('姓名不能超过4个字');
+                return;
+            }
+
+            // 保存玩家名字
+            GameState.playerName = playerName;
+            saveGame();
+
+            // 隐藏名字输入界面，显示游戏界面
+            document.getElementById('name-input-screen').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+
+            // 开始游戏
+            renderScene('startup');
+        }
+
+        // ==================== 版本信息点击（开发者模式）====================
+        let versionClickCount = 0;
+        document.getElementById('version-info').addEventListener('click', () => {
+            versionClickCount++;
+
+            if (versionClickCount >= 5) {
+                alert('开发者模式已激活\n\n已解锁所有场景跳转按钮');
+                versionClickCount = 0;
+            }
+        });
+
+        // ==================== 初始化 ====================
+        window.onload = () => {
+            showStartup();
+
+            // 初始化音频（用户交互后）
+            document.addEventListener('click', initAudio, { once: true });
+        };
+    </script>
+</body>
+</html>
